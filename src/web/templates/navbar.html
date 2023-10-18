@@ -7,7 +7,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
-                {% for item in navbar_content %}
+                {% if navbar_content %}
+                {% for item in navbar_content  %}
                     {% if item.type == 'dropdown' %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -35,6 +36,7 @@
                     <button type="button" class="{{ item.class }}" onclick="{{ item.onclick }}">{{ item.text }}</button>
                     {% endif %}
                 {% endfor %}
+                {% endif %}
             </ul>
         </div>
     </div>

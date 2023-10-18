@@ -8,14 +8,15 @@
 </head>
 
 <body>
-    {% include 'templates/templates.html' %}
+    {% include 'templates/navbar.html' %}
     <div class="content" style="padding: 0 10%;">
     </br>
     </br>
     
         <p>{{ content }}</p>
         <div class="row">
-            {% for row in range(0, num_rows) %}
+            {% if num_rows  %}
+            {% for row in range(0, num_rows)  %}
                 <div class="row">
                     {% for col in range(0, num_columns) %}
                         {% set card_index = row * num_columns + col %}
@@ -31,7 +32,7 @@
                                         <div class="d-grid gap-2">
                                             <button class="btn btn-primary" type="button"
                                                 style="background-color: {{ cards[card_index].color }};border-color: {{ cards[card_index].color }};"
-                                                onclick="window.location.href = '/sendimg';">Button</button>
+                                                onclick="window.location.href = '/{{ cards[card_index].href }}';">{{ cards[card_index].button_text }}</button>
                                         </div>
                                         {% else %}
                                         </br>
@@ -44,6 +45,7 @@
                     {% endfor %}
                 </div>
             {% endfor %}
+            {% endif %}
         </div>
     </div>
     <!-- </div> -->
