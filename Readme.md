@@ -9,6 +9,7 @@
 
 La gestion de la navbar est un élément clé de la conception de votre site web. Vous pouvez personnaliser la navbar de différentes manières, y compris la création de liens de navigation, de menus déroulants, et d'autres fonctionnalités pour faciliter la navigation de vos utilisateurs.
 
+Une navbar se crée comme ceci : navbar_content = [{}]
 Pour la customisation, il existe plusieurs type de navbar :
 - dropdown
 ```python
