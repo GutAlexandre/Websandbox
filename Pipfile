@@ -4,8 +4,34 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+httptools = "0.5.0"
+idna = "3.4"
+anyio = "3.6.2"
+click = "8.1.3"
+h11 = "0.14.0"
+MarkupSafe = "2.1.2"
+Jinja2 = "3.1.2"
+pydantic = "1.10.7"
+pyserial = "3.5"
+python-dotenv = "1.0.0"
+PyYAML = "6.0"
+sniffio = "1.3.0"
+starlette = "0.26.1"
+fastapi = "0.95.0"
+typing_extensions = "4.5.0"
+watchfiles = "0.19.0"
+websockets = "11.0.3"
+uvicorn = "0.22.0"
+phonetics = "1.0.5"
+psycopg2 = "2.9.1"
+requests = "2.28.2"
+reportlab = "4.0.0"
+
+[scripts]
+localhost = "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
 
 [dev-packages]
+autopep8 = "2.0.2"
 
 [requires]
-python_version = "3.11"
+python_version = "3"

@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+    <div class="container-fluid" style="max-width: 80%">
+        <a class="navbar-brand" href="">Alex-website{{ ' : ' + title if title }}</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                {% for item in navbar_content %}
+                    {% if item.type == 'dropdown' %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                {{ item.text }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% for submenu_item in item['items'] %}
+                                    <li><a class="dropdown-item" href="{{ submenu_item.href }}">{{ submenu_item.text }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% elif item.type == 'nav-link' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ item.href }}">{{ item.text }}</a>
+                        </li>
+                    {% elif item.type == 'search' %}
+                        <form class="d-flex" role="search">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+                    {% elif item.type == 'text' %}
+                    <span class="navbar-text">{{ item.text }}</span>
+                    {% elif item.type == 'button' %}
+                    <button type="button" class="{{ item.class }}" onclick="{{ item.onclick }}">{{ item.text }}</button>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</nav>
