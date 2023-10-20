@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat with Websocket</title>
+    <link rel="stylesheet" type="text/css" href="/libs/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/css/chatwebsocket.css">
+</head>
+
+<body>
+       {% include 'templates/statics/navbar.html' %}
+
+    <div class="content" style="padding: 0 10%;">
+
+        <h1>Chat with Websocket</h1>
+        <div>
+            <select id="websocket-select" style="width: 50%;" onchange="change(this)">
+            </select>
+            <button onclick="getWebSocketConnections()">refresh</button>
+        </div>
+        <div class="chat-box" id="chat-box"></div>
+        <form action="" >
+            <div class="input-group">
+                <textarea class="form-control" id="messageText" autocomplete="off" placeholder="Type your message..." rows="2" oninput="toggleButtonState()" disabled></textarea>
+                <button type="button" class="btn btn-primary" id="sendButton" disabled><i class="fa-regular fa-paper-plane fa-2xl" style="color: #ffffff;" onclick="sendMessage()"></i></button>
+            </div>
+        </form>
+    </div>
+    <script src="/libs/js/chatwebsocket.js"></script>
+    <script src="/libs/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/1cfcd63e7f.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

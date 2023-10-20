@@ -57,6 +57,7 @@ Pour la customisation, il existe plusieurs type de navbar :
 
 ---
 
+### Création d'un contenu
 #### Les cartes
 
  Le contenu principal de la "card" peut inclure du texte descriptif, des images, des graphiques, ou toute autre information pertinente. Il s'agit de l'élément principal que l'utilisateur verra en premier.
@@ -73,4 +74,16 @@ cards = [
     },
     # Ajoutez d'autres cartes avec des données similaires
 ]
+```
+
+Le texte peu meme etre un code html :
+```python
+progress_bar = f'''
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 50%; background-color: #f9d852;"
+                aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                <span class="sr-only">50%</span>
+            </div>
+        </div>
+    '''
 ```
