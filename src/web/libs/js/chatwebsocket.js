@@ -2,7 +2,7 @@
 var pseudo = prompt("Entrez votre nom", "");
 document.title = "Chat with Websocket : " + pseudo;
 var chatBox = document.getElementById('chat-box');
-var ws = new WebSocket(`ws://localhost:8000/ws/${pseudo}`);
+var ws = new WebSocket(`wss://192.168.1.33:8000/ws/${pseudo}`);
 
 ws.onmessage = function (event) {
     var message = event.data;
@@ -83,7 +83,7 @@ function displayConnections(connections) {
 }
 
 function getWebSocketConnections() {
-    fetch("http://localhost:8000/get_connections")
+    fetch("https://192.168.1.33:8000/get_connections")
         .then(response => response.json())
         .then(data => {
             displayConnections(data.connections);

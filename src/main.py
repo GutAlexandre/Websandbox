@@ -6,8 +6,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from fastapi.websockets import WebSocketDisconnect
 import json
+from urllib.parse import unquote
+import asyncio
+import uuid
 
-
+       
 app = FastAPI()
 templates = Jinja2Templates(directory="web")
 site_name = "Alex-website" 
@@ -22,6 +25,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+clients = []
+
+# active_connections = []
 websocket_connections: List[WebSocket] = []
 websocket_connections_name = []
 
@@ -44,7 +50,9 @@ async def read_root(request: Request):
         {"color": "#215577", "title": "Envoyer l'image à l'écran", "text": progress_bar, "button":"true", "button_text":"Go","href":""},
         {"color": "#217777", "title": "Envoyer l'image à l'écran", "text": img, "button":"true", "button_text":"Go","href":""},
         {"color": "#218877", "title": "Envoyer l'image à l'écran", "text": "This card has supporting text below as a natural lead-in to additional content.", "button":"true", "button_text":"Go","href":""},
-        {"color": "#212e77", "title": "Envoyer l'image à l'écran", "text": "This card has supporting text below as a natural lead-in to additional content.", "button":"false", "button_text":"Go","href":""},
+        {"color": "#212e77", "title": "Com_connection", "text": "This card has supporting text below as a natural lead-in to additional content.", "button":"true", "button_text":"Go","href":"Com"},
+        {"color": "#218877", "title": "Chatbox", "text": "This card has supporting text below as a natural lead-in to additional content.", "button":"true", "button_text":"Go","href":"chatwebsocket"},
+
     ]
     navbar_content = [
         {
@@ -85,7 +93,7 @@ async def read_root(request: Request):
     ]
     
 
-    disposition = [2,2]
+    disposition = [2,3]
     num_rows = len(disposition)
     total_elements = len(cards)
 
@@ -109,9 +117,30 @@ async def read_root(request: Request):
 
 
 
+
 @app.get("/chatwebsocket", response_class=HTMLResponse)
-async def read_page1(request: Request):
+async def chatwebsocket(request: Request):
     return templates.TemplateResponse("templates/chatwebsocket.html", {"request": request })
+
+@app.get("/cam", response_class=HTMLResponse)
+async def cam(request: Request):
+    return templates.TemplateResponse("templates/cam.html", {"request": request })
+
+
+@app.get("/Com", response_class=HTMLResponse)
+async def Com(request: Request):
+    return templates.TemplateResponse("templates/Com_connection.html", {"request": request })
+
+@app.get("/producer", response_class=HTMLResponse)
+async def producer(request: Request):
+    return templates.TemplateResponse("templates/producer.html", {"request": request })
+
+@app.get("/client", response_class=HTMLResponse)
+async def producer(request: Request):
+    return templates.TemplateResponse("templates/client.html", {"request": request })
+
+
+
 
 @app.get("/get_connections", response_model=dict)
 async def get_connections():
@@ -128,6 +157,31 @@ async def send_message_to(message: str = Form(...), id: str = Form(...), who: st
     return {"connections": connections}
 
 
+@app.websocket("/stream")
+async def stream(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        blob = await websocket.receive_bytes()
+        await websocket.send_bytes(blob)
+
+        
+@app.websocket("/ttt/{producer_id}")
+async def websocket_endpoint(websocket: WebSocket, producer_id: str):
+    await websocket.accept()
+    producer_id = str(uuid.uuid4())  
+    active_connections[producer_id] = websocket
+    try:
+        while True:
+            data = await websocket.receive_text()
+            for connection in active_connections.values():
+                if connection != websocket:
+                    await connection.send_text(f"Producer {producer_id}: {data}")
+    except Exception:
+        pass
+    finally:
+        del active_connections[producer_id]
+
+
 
 @app.websocket("/ws/{pseudo}")
 async def websocket_endpoint(websocket: WebSocket, pseudo: str):
@@ -137,7 +191,6 @@ async def websocket_endpoint(websocket: WebSocket, pseudo: str):
     try:
         while True:
             data = await websocket.receive_text()
-
             connections = [str(connection) for connection in websocket_connections]
             elements = data.split('&')
             data_dict = {}
@@ -145,25 +198,20 @@ async def websocket_endpoint(websocket: WebSocket, pseudo: str):
                 key, value = element.split('=')
                 if '?' in key:
                     url, key = key.split('?', 1)
-
                 value = value.replace('%28', '(') 
+                value = value.replace('+',' ')
+                value = unquote(value)
                 data_dict[key] = value
-
             if data_dict['id'] in websocket_connections_name:
                 index = websocket_connections_name.index(data_dict['id'])
                 data_dict['id'] = index
 
-
-            print(data_dict)
+            data_dict['message'] = data_dict['message'].replace('+',' ')
+            data_dict['message'] = unquote(data_dict['message'] )
             if data_dict['id']=='Broadcast':
                 connections = await broadcast_message(data_dict['message']) 
             else:
                 connections = await send_message_to_id(data_dict['message'],int(data_dict['id']),data_dict['who']) 
-            # await websocket.send_json({"connections": connections})
-
-
-            # await websocket.send_text(f"Message text was: {data}")
-            # await broadcast_message(data)
     except WebSocketDisconnect:
         index = websocket_connections.index(websocket)
         websocket_connections_name.pop(index)
@@ -176,11 +224,7 @@ async def ws_list():
 
 async def broadcast_message(message: str):
     for connection in websocket_connections:
-        await connection.send_text(message)
-
-# async def send_message_to_id(message: str,index: int,who:str):
-#     message = who + " say : " + message
-#     await websocket_connections[index].send_text(message)
+        await connection.send_text(message.replace('+',' '))
 
 async def send_message_to_id(message, index, who):
     message = who + " say : " + message

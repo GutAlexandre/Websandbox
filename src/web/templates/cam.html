@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat with Websocket</title>
+    <link rel="stylesheet" type="text/css" href="/libs/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/css/chatwebsocket.css">
+</head>
+
+<body>
+    {% include 'templates/statics/navbar.html' %}
+
+    <div class="content" style="padding: 0 10%;">
+
+        <h1>Accès à la Caméra</h1>
+        <button id="startcam">Démarrer la caméra</button>
+        <video id="videoElement" autoplay></video>
+        <button id="startpartage">Commencer le partage d'écran</button>
+
+        <script>
+            const startcam = document.getElementById('startcam');
+            const startpartage = document.getElementById('startpartage');
+            const videoElement = document.getElementById('videoElement');
+
+            startcam.addEventListener('click', async () => {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    videoElement.srcObject = stream;
+                } catch (error) {
+                    console.error('Erreur lors de l\'accès à la caméra :', error);
+                }
+            });
+            startpartage.addEventListener('click', async () => {
+                navigator.mediaDevices.getDisplayMedia({ video: true })
+                    .then(function (stream) {
+                        // Afficher le flux vidéo de l'écran partagé
+                        var videoElement = document.createElement("video");
+                        videoElement.srcObject = stream;
+                        videoElement.autoplay = true;
+                        document.body.appendChild(videoElement);
+                    })
+                    .catch(function (error) {
+                        console.error("Erreur lors du partage de l'écran : ", error);
+                    });
+            });
+        </script>
+    </div>
+    <script src="/libs/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/1cfcd63e7f.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

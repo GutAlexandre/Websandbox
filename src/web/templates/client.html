@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Viewer</title>
+</head>
+<body>
+    <video id="viewer-video" autoplay></video>
+
+    <script>
+        const video = document.querySelector("#viewer-video");
+        const ws = new WebSocket("wss://192.168.1.33:8000/stream");
+
+        ws.onmessage = (event) => {
+            const videoBlob = event.data;
+            const videoURL = URL.createObjectURL(videoBlob);
+            video.src = videoURL;
+        };
+    </script>
+</body>
+</html>

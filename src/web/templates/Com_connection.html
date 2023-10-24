@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat with Websocket</title>
+    <link rel="stylesheet" type="text/css" href="/libs/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/css/jquery-ui.theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/css/jquery-ui.structure.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/css/jquery-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/css/chatwebsocket.css">
+</head>
+
+<body>
+    {% include 'templates/statics/navbar.html' %}
+
+    <div class="content" style="padding: 0 10%;">
+
+        <h1>Chat with ComPort </h1>
+
+        <div style="display: flex; align-items: center;">
+            <button id="connect-button" class="btn btn-secondary" onclick="onConnectButtonClick()">Connect via Serial Port</button>
+            <h5 style="width: 30%;"><p id="nameofComport" style="margin-left: 10%;    margin-top: 3%;">PortCom connecté : </p></h5>
+        </div>
+        <div class="chat-box" id="chat-box"></div>
+        <form action="" >
+            <div class="input-group">
+                <textarea class="form-control" id="messageText" autocomplete="off" placeholder="Type your message..." rows="2" oninput="toggleButtonState()" disabled></textarea>
+                <button type="button" class="btn btn-primary" id="sendButton" disabled><i class="fa-regular fa-paper-plane fa-2xl" style="color: #ffffff;" onclick="onSend()"></i></button>
+            </div>
+        </form>
+
+
+        <div>
+        </div>
+    </div>
+    <script src="/libs/js/serial.js"></script>
+    <script src="/libs/js/Com_connection.js"></script>
+    <script src="/libs/js/bootstrap.min.js"></script>
+    <script src="/libs/js/jquery-3.6.0.min.js"></script>
+    <script src="/libs/js/jquery-ui.min.js"></script>
+    <script src="https://kit.fontawesome.com/1cfcd63e7f.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
